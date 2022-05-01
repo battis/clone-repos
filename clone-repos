@@ -1,0 +1,25 @@
+#!/bin/bash
+
+gh auth login --with-token < /config/token.txt
+REPOS=`gh api /user/repos --paginate`
+REPOS=`jq '.[] | {OWNER: .owner.login, NAME: .name, URL: .ssh_url} | @json' <<< "$REPOS"`
+
+ROOT="/repos"
+
+for REPO in $REPOS; do
+	eval "$(jq -r 'fromjson | to_entries | .[] | .key + "=" + (.value | @sh)' <<< "$REPO")"
+	OWNER_PATH="$ROOT/$OWNER"
+	REPO_PATH="$OWNER_PATH/$NAME"
+	if [ ! -d "$REPO_PATH" ]; then
+		if [ ! -d "$OWNER_PATH" ];then
+			mkdir "$OWNER_PATH"
+		fi
+		cd "$OWNER_PATH"
+		echo "Cloning $NAME into $OWNER_PATH"
+		git clone "$URL"
+	else
+		cd "$REPO_PATH"
+		echo "Pulling changes to $REPO_PATH"
+		git pull --all
+	fi
+done
