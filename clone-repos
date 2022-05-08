@@ -10,6 +10,7 @@ for REPO in $REPOS; do
 	eval "$(jq -r 'fromjson | to_entries | .[] | .key + "=" + (.value | @sh)' <<< "$REPO")"
 	OWNER_PATH="$ROOT/$OWNER"
 	REPO_PATH="$OWNER_PATH/$NAME"
+	git config --global --add safe.directory "$REPO_PATH"
 	if [ ! -d "$REPO_PATH" ]; then
 		if [ ! -d "$OWNER_PATH" ];then
 			mkdir "$OWNER_PATH"
