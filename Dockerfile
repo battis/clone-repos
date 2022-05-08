@@ -8,4 +8,4 @@ RUN apt update && apt install -y git gh jq
 WORKDIR /app
 COPY . .
 VOLUME /config /repos
-CMD ["sh", "clone-repos"]
+CMD ["./clone-repos"]

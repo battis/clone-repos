@@ -16,10 +16,10 @@ for REPO in $REPOS; do
 		fi
 		cd "$OWNER_PATH"
 		echo "Cloning $NAME into $OWNER_PATH"
-		git clone "$URL"
+		GIT_SSH_COMMAND="ssh -i /config/id_rsa -o StrictHostKeyChecking=no" git clone "$URL"
 	else
 		cd "$REPO_PATH"
 		echo "Pulling changes to $REPO_PATH"
-		git pull --all
+		GIT_SSH_COMMAND="ssh -i /config/id_rsa -o StrictHostKeyChecking=no" git pull --all
 	fi
 done
